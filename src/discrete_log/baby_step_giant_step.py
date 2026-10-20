@@ -18,19 +18,19 @@ def bsgs(g: int, h: int, p: int) -> int | None:
     Returns:
         int | None: The value for x such that h = g^x mod p
     """
-    N = ceil(sqrt(p - 1))  # phi(p) is p-1 if p is prime
+    n = ceil(sqrt(p - 1))  # phi(p) is p-1 if p is prime
 
     # Store hashmap of g^{1...m} (mod p). Baby step.
-    tbl = {pow(g, i, p): i for i in range(N)}
+    tbl = {pow(g, i, p): i for i in range(n)}
 
     # Precompute via Fermat's Little Theorem
-    c = pow(g, N * (p - 2), p)
+    c = pow(g, n * (p - 2), p)
 
     # Search for an equivalence in the table. Giant step.
-    for j in range(N):
+    for j in range(n):
         y = (h * pow(c, j, p)) % p
         if y in tbl:
-            return j * N + tbl[y]
+            return j * n + tbl[y]
 
     # Solution not found
     return None
