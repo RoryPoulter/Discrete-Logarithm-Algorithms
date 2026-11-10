@@ -6,6 +6,7 @@ https://www.geeksforgeeks.org/dsa/multiplicative-inverse-under-modulo-m/
 
 from math import prod
 from .baby_step_giant_step import baby_step_giant_step
+from .utils import mod_inverse
 
 
 def prime_factorise(n: int) -> list[int]:
@@ -34,66 +35,8 @@ def prime_factorise(n: int) -> list[int]:
     return factors
 
 
-def gcd(a: int, b: int) -> int:
-    """Finds the greatest common divisor of two integers a, b.
-
-    Args:
-        a (int): The first integer
-        b (int): The second integer
-
-    Returns:
-        int: The greatest common divisor
-    """
-    while b:
-        a, b = b, a % b
-    return a
-
-
-def mod_inverse(args: tuple[int]) -> int:
-    """Finds the modular multiplicative inverse of a number n under m.
-
-    Args:
-        args (tuple[int]): The original-modulo pair (n, m).
-
-    Returns:
-        int: The inverse of n.
-    """
-    n = args[0]
-    m = args[1]
-    # Check if inverse exists
-    if gcd(n, m) != 1:
-        return -1
-
-    m0 = m
-    y = 0
-    x = 1
-
-    if m == 1:
-        return 0
-
-    while n > 1:
-        # q is quotient
-        q = n // m
-        t = m
-
-        # m is remainder now, process same as Euclid's algo
-        m = n % m
-        n = t
-        t = y
-
-        # Update y and x
-        y = x - q * y
-        x = t
-
-    # Make x positive
-    if x < 0:
-        x = x + m0
-
-    return x
-
-
 def calculate_x(p: int, prime_factors: list[int], subresults: list[int]) -> int:
-    """Calculate the value of x using the hinese Remainder Theorem
+    """Calculate the value of x using the Chinese Remainder Theorem
 
     Args:
         p (int): The prime base of the group
