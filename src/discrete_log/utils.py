@@ -1,4 +1,6 @@
 """Utility functions for the Discrete Logarithm algorithms.
+`mod_inverse` function adapted from: 
+https://www.geeksforgeeks.org/dsa/multiplicative-inverse-under-modulo-m/
 """
 
 
