@@ -12,3 +12,6 @@ __all__ = [
     "pollards_kangaroo",
     "pollards_rho"
 ]
+
+
+VERSION = "0.2.0"
