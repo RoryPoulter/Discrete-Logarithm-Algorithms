@@ -77,7 +77,7 @@ def pohlig_hellman(g: int, h: int, p: int, debug: bool = False) -> int:
         g_i = pow(g, partial_products[i], p)
         h_i = pow(h, partial_products[i], p)
         if debug:
-            try: 
+            try:
                 print(f"{i=}: {g_i=}, {h_i=}")
             except ValueError:
                 print(f"{i=}: too long...")
