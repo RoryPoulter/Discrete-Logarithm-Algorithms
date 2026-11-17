@@ -4,25 +4,31 @@
 
 from time import time
 from collections.abc import Callable
-from discrete_log import baby_step_giant_step, pohlig_hellman, pollards_rho, utils
+from discrete_log import (baby_step_giant_step,
+                          pohlig_hellman,
+                          pollards_rho,
+                          pollards_kangaroo,
+                          utils)
 
 
-class Colours:
-    """Terminal print colours. Code from:
-    https://stackoverflow.com/questions/287871/how-do-i-print-colored-text-to-the-terminal
-    """
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKCYAN = '\033[96m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
+# Terminal print colours. Code adapted from:
+# https://stackoverflow.com/questions/287871/how-do-i-print-colored-text-to-the-terminal
+COLOURS = {
+    "HEADER": '\033[95m',
+    "OKBLUE": '\033[94m',
+    "OKCYAN": '\033[96m',
+    "OKGREEN": '\033[92m',
+    "WARNING": '\033[93m',
+    "FAIL": '\033[91m',
+    "ENDC": '\033[0m',
+    "BOLD": '\033[1m',
+    "UNDERLINE": '\033[4m'
+}
 
 
-def fail(*args):
+def fail(
+    *args
+    ) -> int:
     """Dummy functin to fail all tests.
 
     Returns:
@@ -32,7 +38,10 @@ def fail(*args):
     return 0
 
 
-def test_functions(functions: list[Callable], tests: list[tuple]) -> None:
+def test_functions(
+    functions: list[Callable],
+    tests: list[tuple]
+    ) -> None:
     """Test suite for the multiple discrete logarithm algorithms.
 
     Args:
@@ -53,23 +62,24 @@ def test_functions(functions: list[Callable], tests: list[tuple]) -> None:
             end = time()
             time_elapsed = end - start
             if x_result is not None and utils.verify(*test, x_result):
-                print(f"{Colours.OKGREEN}{x_result} ✓ ({time_elapsed} s){Colours.ENDC}")
+                print(f"{COLOURS["OKGREEN"]}{x_result} ✓ ({time_elapsed} s){COLOURS["ENDC"]}")
                 passed += 1
             else:
-                print(f"{Colours.FAIL}{x_result} X ({time_elapsed} s){Colours.ENDC}")
+                print(f"{COLOURS["FAIL"]}{x_result} X ({time_elapsed} s){COLOURS["ENDC"]}")
         if passed == total:
             passed_functions.append(func)
-            print(f"{Colours.OKGREEN}  Passed [{passed}/{total}] tests: passed\n{Colours.ENDC}")
+            print(f"{COLOURS["OKGREEN"]}  Passed [{passed}/{total}] tests: passed\n{
+                COLOURS["ENDC"]}")
         else:
             failed_functions.append(func)
-            print(f"{Colours.FAIL}  Passed [{passed}/{total}] tests: failed\n{Colours.ENDC}")
+            print(f"{COLOURS["FAIL"]}  Passed [{passed}/{total}] tests: failed\n{COLOURS["ENDC"]}")
 
     if passed_functions:
-        print(f"{Colours.OKGREEN}Functions passed: [{len(passed_functions)}/{len(functions)}]: {
-            ", ".join([func.__name__ for func in passed_functions])}{Colours.ENDC}")
+        print(f"{COLOURS["OKGREEN"]}Functions passed: [{len(passed_functions)}/{len(functions)}]: {
+            ", ".join([func.__name__ for func in passed_functions])}{COLOURS["ENDC"]}")
     if failed_functions:
-        print(f"{Colours.FAIL}Functions failed: [{len(failed_functions)}/{len(functions)}]: {
-            ", ".join([func.__name__ for func in failed_functions])}{Colours.ENDC}")
+        print(f"{COLOURS["FAIL"]}Functions failed: [{len(failed_functions)}/{len(functions)}]: {
+            ", ".join([func.__name__ for func in failed_functions])}{COLOURS["ENDC"]}")
     print("==============================End Test Suite==============================")
 
 
@@ -89,7 +99,8 @@ def main():
     functions = [
         baby_step_giant_step,
         pohlig_hellman,
-        pollards_rho
+        pollards_rho,
+        pollards_kangaroo
     ]
     test_functions(functions, tests)
 
