@@ -1,6 +1,7 @@
 """__init__ file for the discrete log module.
 """
 from .baby_step_giant_step import baby_step_giant_step
+from .parallel_pohlig_hellman import parallel_pohlig_hellman
 from .pohlig_hellman import pohlig_hellman
 from .pollards_kangaroo import pollards_kangaroo
 from .pollards_rho import pollards_rho
@@ -8,10 +9,11 @@ from .pollards_rho import pollards_rho
 
 __all__ = [
     "baby_step_giant_step",
+    "parallel_pohlig_hellman",
     "pohlig_hellman",
     "pollards_kangaroo",
     "pollards_rho"
 ]
 
 
-VERSION = "0.3.0"
+VERSION = "0.4.0"

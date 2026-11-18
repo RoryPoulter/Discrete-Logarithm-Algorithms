@@ -8,6 +8,7 @@ from discrete_log import (baby_step_giant_step,
                           pohlig_hellman,
                           pollards_rho,
                           pollards_kangaroo,
+                          parallel_pohlig_hellman,
                           utils)
 
 
@@ -94,13 +95,15 @@ def main():
         (2, 255439, 377327),
         (2, 5, 1019),
         (2, 2220359, 2674621),
-        (2, 21854006, 78386653)
+        (2, 21854006, 78386653),
+        (2, 956553292, 1001100283)
     ]
     functions = [
         baby_step_giant_step,
         pohlig_hellman,
         pollards_rho,
-        pollards_kangaroo
+        pollards_kangaroo,
+        parallel_pohlig_hellman
     ]
     test_functions(functions, tests)
 
