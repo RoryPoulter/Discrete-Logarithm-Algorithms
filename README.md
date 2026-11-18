@@ -1,5 +1,10 @@
 # Discrete-Logarithm-Algorithms
 
+![GitHub License](https://img.shields.io/github/license/RoryPoulter/Discrete-Logarithm-Algorithms?style=for-the-badge)
+![GitHub Issues](https://img.shields.io/github/issues/RoryPoulter/Discrete-Logarithm-Algorithms?style=for-the-badge)
+![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/RoryPoulter/Discrete-Logarithm-Algorithms/pylint.yml?style=for-the-badge&logo=Python&logoColor=ffffff)
+
+
 # Contents
 - [Discrete-Logarithm-Algorithms](#discrete-logarithm-algorithms)
 - [Contents](#contents)
@@ -8,6 +13,8 @@
     - [Algorithms](#algorithms)
   - [Package Syntax](#package-syntax)
     - [Basic Algorithms](#basic-algorithms)
+    - [`parallel_pohlig_hellman`](#parallel_pohlig_hellman)
+    - [Utility Functions](#utility-functions)
 
 Implementing discrete logarithm algorithms and comparing run-times on different inputs. The algorithms are configured for the multiplicative group of integers modulo $p$, written as $(\mathbb{Z}/p\mathbb{Z})^{\times}$
 
@@ -50,10 +57,32 @@ x = func(g, h, p)
 ```
 
 **Parameters**:
-* `g` (`int`) - The generator for the group $GF(p)$
+* `g` (`int`) - The generator for the group $G$
 * `h` (`int`) - The result of the equation $h = g^x \ mod \ p$
-* `p` (`int`) - The prime base of the group $GF(p)$
+* `p` (`int`) - The prime base of the group $G$
 
 **Returns**:
 * `x` (`int`) - The exponent which solves the equation $h = g^x \ mod \ p$
 
+### `parallel_pohlig_hellman`
+
+Below is the syntax for the parallel implementation of the Pohlig-Hellman algorithm.
+
+```py
+x = parallel_pohlig_hellman(g, h, p, max_threads=8)
+```
+
+**Parameters**:
+* `g` (`int`) - The generator for the group $G$.
+* `h` (`int`) - The result of the equation $h = g^x \ mod \ p$.
+* `p` (`int`) - The prime base of the group $G$.
+* `max_threads` (`int`, *optional*) - The maximum number of threads allocated to the subgroups. Defaults to 4.
+
+**Returns**:
+* `x` (`int`) - The exponent which solves the equation $h = g^x \ mod \ p$
+
+### Utility Functions
+```py
+valid: bool = verify(g, h, p, x)  # Verifies the discrete log found is correct
+smooth: int = smoothness(n)  # Finds the smoothness of an integer n - the largest prime factor
+```
