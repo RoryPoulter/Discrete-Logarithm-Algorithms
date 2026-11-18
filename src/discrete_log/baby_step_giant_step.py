@@ -6,7 +6,7 @@ https://gist.github.com/0xTowel/b4e7233fc86d8bb49698e4f1318a5a73
 from math import ceil, sqrt
 
 
-def baby_step_giant_step(g: int, h: int, p: int) -> int | None:
+def baby_step_giant_step(g: int, h: int, p: int, n_i: int | None = None) -> int | None:
     """Solve for x in h = g^x mod p given a prime p.
     If p is not prime, you shouldn't use BSGS anyway.
 
@@ -18,7 +18,10 @@ def baby_step_giant_step(g: int, h: int, p: int) -> int | None:
     Returns:
         int | None: The value for x such that h = g^x mod p
     """
-    n = ceil(sqrt(p - 1))  # phi(p) is p-1 if p is prime
+    if n_i is None:
+        n = ceil(sqrt(p - 1))  # phi(p) is p-1 if p is prime
+    else:
+        n = ceil(sqrt(n_i))
 
     # Store hashmap of g^{1...m} (mod p). Baby step.
     tbl = {pow(g, i, p): i for i in range(n)}

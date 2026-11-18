@@ -166,6 +166,10 @@ def solve_ph_subgroup(
     """
     g_i = pow(g, n_i, p)
     h_i = pow(h, n_i, p)
+    x_i = baby_step_giant_step(g_i, h_i, p, n_i)
+    if x_i is not None:
+        return x_i
+    # If using n_i for the group order fails, use p-1.
     return baby_step_giant_step(g_i, h_i, p)
 
 
