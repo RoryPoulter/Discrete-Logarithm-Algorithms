@@ -1,10 +1,8 @@
 """Utility functions for the Discrete Logarithm algorithms.
-`mod_inverse` function adapted from: 
-https://www.geeksforgeeks.org/dsa/multiplicative-inverse-under-modulo-m/
 """
 
 
-from math import gcd, prod
+from math import gcd, isqrt, prod
 from .baby_step_giant_step import baby_step_giant_step
 
 
@@ -31,7 +29,8 @@ def verify(
 def mod_inverse(
     args: tuple[int]
     ) -> int:
-    """Finds the modular multiplicative inverse of a number n under m.
+    """Finds the modular multiplicative inverse of a number n under m. Code adapted from:
+    https://www.geeksforgeeks.org/dsa/multiplicative-inverse-under-modulo-m/
 
     Args:
         args (tuple[int]): The original-modulo pair (n, m).
@@ -109,18 +108,29 @@ def prime_factorise(
     Returns:
         list[int]: The list of p_i^n_i which multiply to n
     """
-    factors = []
+    if n < 2:
+        return []
 
-    upper_bound = 1 + n // 2  # Upper bound for prime factors
-    for p_i in range(2, upper_bound):
+    factors = []
+    count = 0
+    while n % 2 == 0:
+        n //= 2
+        count += 1
+    if count > 0:
+        factors.append(pow(2, count))
+
+    factor = 3
+    while factor <= isqrt(n):
         count = 0
-        while n % p_i == 0:
-            n //= p_i
+        while n % factor == 0:
+            n //= factor
             count += 1
         if count > 0:
-            factors.append(pow(p_i, count))
-        if n == 1:
-            break
+            factors.append(pow(factor, count))
+        factor += 2
+
+    if n > 1:
+        factors.append(n)
 
     return factors
 
@@ -136,14 +146,26 @@ def smoothness(
     Returns:
         int: The smoothness of `n`.
     """
-    max_p = 2
-    p = 2
-    while n > 1:
-        if n % p == 0:
-            max_p = p
-            while n % p == 0:
-                n //= p
-        p += 1
+    if n < 2:
+        return 2
+
+    max_p = 1
+    if n % 2 == 0:
+        max_p = 2
+        while n % 2 == 0:
+            n //= 2
+
+    factor = 3
+    while factor <= isqrt(n):
+        if n % factor == 0:
+            max_p = factor
+            while n % factor == 0:
+                n //= factor
+        factor += 2
+
+    if n > 1:
+        max_p = n
+
     return max_p
 
 
@@ -152,7 +174,7 @@ def solve_ph_subgroup(
     h: int,
     p: int,
     n_i: int
-) -> int | None:
+    ) -> int | None:
     """Solver for the subgroup of G for Pohlig-Hellman.
 
     Args:
@@ -171,6 +193,34 @@ def solve_ph_subgroup(
         return x_i
     # If using n_i for the group order fails, use p-1.
     return baby_step_giant_step(g_i, h_i, p)
+
+
+def is_prime(
+    n: int
+    ) -> bool:
+    """Checks if an integer is a prime.
+
+    Args:
+        n (int): An integer.
+
+    Returns:
+        bool: Boolean value for if the integer is a prime.
+    """
+    return n == smoothness(n)
+
+
+def is_safe_prime(
+    n: int
+    ) -> bool:
+    """Checks if an integer is a safe prime: n = 2p + 1 where p is also prime.
+
+    Args:
+        n (int): An integer.
+
+    Returns:
+        bool: Boolean value for it the integer is a safe prime.
+    """
+    return is_prime(n) and 2 * smoothness(n-1) + 1 == n
 
 
 if __name__ == "__main__":

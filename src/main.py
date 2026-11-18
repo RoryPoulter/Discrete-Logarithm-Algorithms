@@ -116,8 +116,10 @@ def main():
 
     print("Testing serial vs parallel Pohlig-Hellman...")
     parallel_tests = [
-        (2, 249617749644, 865849357141), # 674117
-        (2, 655562086919, 4580442851111)
+        (2, 249617749644, 865849357141),    # 674117
+        (2, 655562086919, 4580442851111),   # 9067
+        (7894352216, 355407489, 604604729), # 997
+        (2, 18625593847, 8696209053167)     # 5257683829
     ]
     test_functions([pohlig_hellman, parallel_pohlig_hellman], parallel_tests)
 

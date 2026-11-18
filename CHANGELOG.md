@@ -6,6 +6,7 @@
 ### Improvements
 - Swapped `ThreadPoolExecutor` for `ProcessPoolExecutor` for better parallelisation in `parallel_pohlig_hellman`
 - Add optional group order parameter `n_i` to `baby_step_giant_step`
+- Optimise `smoothness` and `prime_factorise` functions
 ### Bug Fixes
 - Update `solve_ph_subgroup` to try group order of $n_i$ before resorting to $p-1$
 ### Other Changes
@@ -21,5 +22,6 @@
 - Create `CHANGELOG.md`
 - Add comments with prime smoothness to test cases
 - Update `README.md` with badges and more intuitive group theory notation
+- Create `is_prime` and `is_safe_prime` functions
 
 [**Full Changelog**](https://github.com/RoryPoulter/Discrete-Logarithm-Algorithms/commits/v0.4.1)
