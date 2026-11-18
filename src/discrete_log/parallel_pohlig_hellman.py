@@ -2,7 +2,7 @@
 """
 
 
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ProcessPoolExecutor
 from .utils import chinese_remainder, prime_factorise, solve_ph_subgroup
 from .pohlig_hellman import pohlig_hellman
 
@@ -42,7 +42,7 @@ def parallel_pohlig_hellman(
     subresults: list[int] = []
 
     workers = max(1, min(max_threads, len(prime_factors)))
-    with ThreadPoolExecutor(max_workers=workers) as executor:
+    with ProcessPoolExecutor(max_workers=workers) as executor:
         subresults = list(executor.map(
             solve_ph_subgroup,
             [g] * len(partial_products),
