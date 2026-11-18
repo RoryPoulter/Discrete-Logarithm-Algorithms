@@ -50,6 +50,13 @@ def test_functions(
         tests (list[tuple]): A list of tuples of values (g, h, p).
     """
     print("=============================Begin Test Suite=============================")
+
+    print("Test cases:")
+    for g, h, p in tests:
+        smoothness = utils.smoothness(p-1)
+        print(f"    {g=}, {h=}, {p=}, {smoothness=}")
+
+    print("Begin tests:")
     passed_functions = []
     failed_functions = []
     for func in functions:
@@ -61,12 +68,11 @@ def test_functions(
             start = time()
             x_result = func(*test)
             end = time()
-            time_elapsed = end - start
             if x_result is not None and utils.verify(*test, x_result):
-                print(f"{COLOURS["OKGREEN"]}{x_result} ✓ ({time_elapsed} s){COLOURS["ENDC"]}")
+                print(f"{COLOURS["OKGREEN"]}{x_result} ✓ ({end - start} s){COLOURS["ENDC"]}")
                 passed += 1
             else:
-                print(f"{COLOURS["FAIL"]}{x_result} X ({time_elapsed} s){COLOURS["ENDC"]}")
+                print(f"{COLOURS["FAIL"]}{x_result} X ({end - start} s){COLOURS["ENDC"]}")
         if passed == total:
             passed_functions.append(func)
             print(f"{COLOURS["OKGREEN"]}  Passed [{passed}/{total}] tests: passed\n{
@@ -88,15 +94,15 @@ def main():
     """Runs the DLP algorithms on random inputs and compares the run-times.
     """
     # [ ( g, h, p ) ]
-    tests = [
-        (2, 7, 11),
-        (2, 435, 2579),
-        (2, 5189, 94109),
-        (2, 255439, 377327),
-        (2, 5, 1019),
-        (2, 2220359, 2674621),
-        (2, 21854006, 78386653),
-        (2, 956553292, 1001100283)
+    tests = [                       # Smoothness:
+        (2, 7, 11),                 # 5
+        (2, 435, 2579),             # 1289
+        (2, 5189, 94109),           # 3361
+        (2, 255439, 377327),        # 5099
+        (2, 5, 1019),               # 509
+        (2, 2220359, 2674621),      # 127
+        (2, 21854006, 78386653),    # 75083
+        (2, 956553292, 1001100283)  # 5573
     ]
     functions = [
         baby_step_giant_step,
