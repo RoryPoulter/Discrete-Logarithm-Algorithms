@@ -3,6 +3,8 @@
 ![GitHub License](https://img.shields.io/github/license/RoryPoulter/Discrete-Logarithm-Algorithms?style=for-the-badge)
 ![GitHub Issues](https://img.shields.io/github/issues/RoryPoulter/Discrete-Logarithm-Algorithms?style=for-the-badge)
 ![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/RoryPoulter/Discrete-Logarithm-Algorithms/pylint.yml?style=for-the-badge&logo=Python&logoColor=ffffff)
+![GitHub Release](https://img.shields.io/github/v/release/RoryPoulter/Discrete-Logarithm-Algorithms?include_prereleases&style=for-the-badge)
+
 
 
 # Contents
