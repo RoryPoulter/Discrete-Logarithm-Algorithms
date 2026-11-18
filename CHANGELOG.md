@@ -11,6 +11,8 @@
 - Update `solve_ph_subgroup` to try group order of $n_i$ before resorting to $p-1$
 ### Other Changes
 - Add test suite to `main.py` for serial and parallel PH comparison
+- Create `is_prime` and `is_safe_prime` functions
+
 
 ## v0.4.1 [18/11/2026]
 
@@ -22,6 +24,5 @@
 - Create `CHANGELOG.md`
 - Add comments with prime smoothness to test cases
 - Update `README.md` with badges and more intuitive group theory notation
-- Create `is_prime` and `is_safe_prime` functions
 
 [**Full Changelog**](https://github.com/RoryPoulter/Discrete-Logarithm-Algorithms/commits/v0.4.1)
