@@ -94,24 +94,32 @@ def main():
     """Runs the DLP algorithms on random inputs and compares the run-times.
     """
     # [ ( g, h, p ) ]
-    tests = [                       # Smoothness:
-        (2, 7, 11),                 # 5
-        (2, 435, 2579),             # 1289
-        (2, 5189, 94109),           # 3361
-        (2, 255439, 377327),        # 5099
-        (2, 5, 1019),               # 509
-        (2, 2220359, 2674621),      # 127
-        (2, 21854006, 78386653),    # 75083
-        (2, 956553292, 1001100283)  # 5573
+    basic_tests = [                     # Smoothness:
+        (2, 7, 11),                     # 5
+        (2, 435, 2579),                 # 1289
+        (2, 5189, 94109),               # 3361
+        (2, 255439, 377327),            # 5099
+        (2, 5, 1019),                   # 509
+        (2, 2220359, 2674621),          # 127
+        (2, 21854006, 78386653),        # 75083
+        (2, 956553292, 1001100283),     # 5573
     ]
-    functions = [
+    all_functions = [
         baby_step_giant_step,
-        pohlig_hellman,
         pollards_rho,
         pollards_kangaroo,
+        pohlig_hellman,
         parallel_pohlig_hellman
     ]
-    test_functions(functions, tests)
+    print("Testing all functions...")
+    test_functions(all_functions, basic_tests)
+
+    print("Testing serial vs parallel Pohlig-Hellman...")
+    parallel_tests = [
+        (2, 249617749644, 865849357141), # 674117
+        (2, 655562086919, 4580442851111)
+    ]
+    test_functions([pohlig_hellman, parallel_pohlig_hellman], parallel_tests)
 
 
 if __name__ == "__main__":
