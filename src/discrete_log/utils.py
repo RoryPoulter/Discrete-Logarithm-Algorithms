@@ -5,6 +5,7 @@ https://www.geeksforgeeks.org/dsa/multiplicative-inverse-under-modulo-m/
 
 
 from math import gcd, prod
+from .baby_step_giant_step import baby_step_giant_step
 
 
 def verify(
@@ -144,6 +145,28 @@ def smoothness(
                 n //= p
         p += 1
     return max_p
+
+
+def solve_ph_subgroup(
+    g: int,
+    h: int,
+    p: int,
+    n_i: int
+) -> int | None:
+    """Solver for the subgroup of G for Pohlig-Hellman.
+
+    Args:
+        g (int): The generator of the group G.
+        h (int): The result of the modulo arithmetic.
+        p (int): The prime base of the group.
+        n_i (int): The power, equal to N / p_i.
+
+    Returns:
+        int | None: The discrete logarithm of the subgroup.
+    """
+    g_i = pow(g, n_i, p)
+    h_i = pow(h, n_i, p)
+    return baby_step_giant_step(g_i, h_i, p)
 
 
 if __name__ == "__main__":

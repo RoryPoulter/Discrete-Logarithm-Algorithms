@@ -3,30 +3,8 @@
 
 
 from concurrent.futures import ThreadPoolExecutor
-from .baby_step_giant_step import baby_step_giant_step
-from .utils import chinese_remainder, prime_factorise
-
-
-def solve_subgroup(
-    g: int,
-    h: int,
-    p: int,
-    n_i: int
-    ) -> int | None:
-    """Solver for the subgroup of G.
-
-    Args:
-        g (int): The generator of the group G.
-        h (int): The result of the modulo arithmetic.
-        p (int): The prime base of the group.
-        n_i (int): The power, equal to N / p_i.
-
-    Returns:
-        int | None: The discrete logarithm of the subgroup.
-    """
-    g_i = pow(g, n_i, p)
-    h_i = pow(h, n_i, p)
-    return baby_step_giant_step(g_i, h_i, p)
+from .utils import chinese_remainder, prime_factorise, solve_ph_subgroup
+from .pohlig_hellman import pohlig_hellman
 
 
 def parallel_pohlig_hellman(
@@ -44,11 +22,17 @@ def parallel_pohlig_hellman(
         p (int): The prime base of the group.
         max_threads (int, optional): The maximum number of threads allowed. Defaults to 4.
 
+    Raises:
+        ValueError: Raised if `max_threads < 1`.
+
     Returns:
         int: The discrete logarithm `x`.
     """
     if max_threads < 1:
         raise ValueError("max_threads must be at least 1")
+
+    if max_threads == 1:
+        return pohlig_hellman(g, h, p)
 
     # 1. Find the prime factorisation of the order of the group N.
     prime_factors: list[int] = prime_factorise(p-1)
@@ -60,7 +44,7 @@ def parallel_pohlig_hellman(
     workers = max(1, min(max_threads, len(prime_factors)))
     with ThreadPoolExecutor(max_workers=workers) as executor:
         subresults = list(executor.map(
-            solve_subgroup,
+            solve_ph_subgroup,
             [g] * len(partial_products),
             [h] * len(partial_products),
             [p] * len(partial_products),
