@@ -10,3 +10,5 @@
 - Create `CHANGELOG.md`
 - Add comments with prime smoothness to test cases
 - Update `README.md` with badges and more intuitive group theory notation
+
+[**Full Changelog**](https://github.com/RoryPoulter/Discrete-Logarithm-Algorithms/commits/v0.4.1)
