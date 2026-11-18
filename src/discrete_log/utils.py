@@ -4,10 +4,15 @@ https://www.geeksforgeeks.org/dsa/multiplicative-inverse-under-modulo-m/
 """
 
 
-from math import gcd
+from math import gcd, prod
 
 
-def verify(g: int, h: int, p: int, x: int) -> bool:
+def verify(
+    g: int,
+    h: int,
+    p: int,
+    x: int
+    ) -> bool:
     """Verifier function for the results of the discrete log algorithms.
 
     Args:
@@ -22,7 +27,9 @@ def verify(g: int, h: int, p: int, x: int) -> bool:
     return h == pow(g, x, p)
 
 
-def mod_inverse(args: tuple[int]) -> int:
+def mod_inverse(
+    args: tuple[int]
+    ) -> int:
     """Finds the modular multiplicative inverse of a number n under m.
 
     Args:
@@ -63,3 +70,84 @@ def mod_inverse(args: tuple[int]) -> int:
         x = x + m0
 
     return x
+
+
+def chinese_remainder(
+    p: int,
+    prime_factors: list[int],
+    subresults: list[int]
+    ) -> int:
+    """Calculate the value of x using the Chinese Remainder Theorem
+
+    Args:
+        p (int): The prime base of the group
+        prime_factors (list[int]): The prime factorisation of p-1
+        subresults (list[int]): The solutions of x_i from each subgroup
+
+    Returns:
+        int: The value of x
+    """
+    n = p - 1
+    # Find the partial products
+    partial_products: list[int] = [n // p_i for p_i in prime_factors]
+    modular_inverses: list[int] = list(map(mod_inverse, zip(partial_products, prime_factors)))
+
+    x: int = sum(map(prod, zip(partial_products, subresults, modular_inverses)))
+    return x % n
+
+
+def prime_factorise(
+    n: int
+    ) -> list[int]:
+    """Finds the prime factorisation of an integer n such that:
+        n = p_1^n_1 + p_2^n_2 + p_3^n_3 + ...
+
+    Args:
+        n (int): The composite number to be factorised.
+
+    Returns:
+        list[int]: The list of p_i^n_i which multiply to n
+    """
+    factors = []
+
+    upper_bound = 1 + n // 2  # Upper bound for prime factors
+    for p_i in range(2, upper_bound):
+        count = 0
+        while n % p_i == 0:
+            n //= p_i
+            count += 1
+        if count > 0:
+            factors.append(pow(p_i, count))
+        if n == 1:
+            break
+
+    return factors
+
+
+def smoothness(
+    n: int
+    ) -> int:
+    """Calculates the smoothness of an integer - the largest prime factor.
+
+    Args:
+        n (int): The integer.
+
+    Returns:
+        int: The smoothness of `n`.
+    """
+    max_p = 2
+    p = 2
+    while n > 1:
+        if n % p == 0:
+            max_p = p
+            while n % p == 0:
+                n //= p
+        p += 1
+    return max_p
+
+
+if __name__ == "__main__":
+    # print(smoothness(1001100283))
+    print(smoothness(1001100283-1))
+    print(pow(2, 6342175, 1001100283))
+    print(verify(2, 956553292, 1001100283, 6342175))
