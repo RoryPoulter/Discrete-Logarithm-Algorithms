@@ -3,6 +3,7 @@
 
 
 from time import time
+from random import randint
 from collections.abc import Callable
 from discrete_log import (baby_step_giant_step,
                           pohlig_hellman,
@@ -39,15 +40,18 @@ def fail(
     return 0
 
 
-def test_functions(
+def fixed_test_functions(
     functions: list[Callable],
     tests: list[tuple]
-    ) -> None:
-    """Test suite for the multiple discrete logarithm algorithms.
+    ) -> dict:
+    """Test suite for the multiple discrete logarithm algorithms on fixed test cases.
 
     Args:
         functions (list[Callable]): A list of the functions to be tested.
         tests (list[tuple]): A list of tuples of values (g, h, p).
+
+    Returns:
+        dict: The results of the tests.
     """
     print("=============================Begin Test Suite=============================")
 
@@ -59,10 +63,12 @@ def test_functions(
     print("Begin tests:")
     passed_functions = []
     failed_functions = []
+    results = {}
     for func in functions:
         print(f"  Testing function {func.__name__}")
         passed = 0
         total = len(tests)
+        results[func.__name__] = []
         for test in tests:
             print(f"    g = {test[0]}, h = {test[1]}, p = {test[2]} | x = ", end='')
             start = time()
@@ -71,6 +77,11 @@ def test_functions(
             if x_result is not None and utils.verify(*test, x_result):
                 print(f"{COLOURS["OKGREEN"]}{x_result} ✓ ({end - start} s){COLOURS["ENDC"]}")
                 passed += 1
+                results[func.__name__].append({"g": test[0],
+                                               "h": test[1],
+                                               "p": test[2],
+                                               "x": x_result,
+                                               "time": end - start})
             else:
                 print(f"{COLOURS["FAIL"]}{x_result} X ({end - start} s){COLOURS["ENDC"]}")
         if passed == total:
@@ -88,6 +99,43 @@ def test_functions(
         print(f"{COLOURS["FAIL"]}Functions failed: [{len(failed_functions)}/{len(functions)}]: {
             ", ".join([func.__name__ for func in failed_functions])}{COLOURS["ENDC"]}")
     print("==============================End Test Suite==============================")
+    return results
+
+
+def random_test_functions(functions: list[Callable], g: int, p: int, num_tests: int = 10) -> dict:
+    """Generates random tests from a generator and prime, and tests the funcitons.
+
+    Args:
+        functions (list[Callable]): The list of functions to test.
+        g (int): The generator of the group.
+        p (int): The prime base of the group.
+        num_tests (int, optional): The number of random tests to generate. Defaults to 10.
+
+    Returns:
+        dict: The results of the tests.
+    """
+
+    tests = []
+    for _ in range(num_tests):
+        test = generate_random_test(g, p)
+        tests.append(test)
+
+    return fixed_test_functions(functions, tests)
+
+
+def generate_random_test(g: int, p: int) -> tuple[int, int, int]:
+    """Generates a random discrete log to automate testing on specific primes.
+
+    Args:
+        g (int): The generator of the group.
+        p (int): The prime base of the group.
+
+    Returns:
+        tuple[int, int, int]: A tuple of (g, h, p)
+    """
+    x = randint(1, p-1)
+    h = pow(g, x, p)
+    return (g, h, p)
 
 
 def main():
@@ -112,7 +160,7 @@ def main():
         parallel_pohlig_hellman
     ]
     print("Testing all functions...")
-    test_functions(all_functions, basic_tests)
+    fixed_test_functions(all_functions, basic_tests)
 
     print("Testing serial vs parallel Pohlig-Hellman...")
     parallel_tests = [
@@ -121,7 +169,11 @@ def main():
         (7894352216, 355407489, 604604729), # 997
         (2, 18625593847, 8696209053167)     # 5257683829
     ]
-    test_functions([pohlig_hellman, parallel_pohlig_hellman], parallel_tests)
+    fixed_test_functions([pohlig_hellman, parallel_pohlig_hellman], parallel_tests)
+
+    print("Testing serial vs parallel Pohlig-Hellman on g=2, p=8696209053167...")
+    results = random_test_functions([pohlig_hellman, parallel_pohlig_hellman], 2, 8696209053167)
+    print(results)
 
 
 if __name__ == "__main__":
