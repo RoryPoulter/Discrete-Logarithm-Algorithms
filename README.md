@@ -87,4 +87,6 @@ x = parallel_pohlig_hellman(g, h, p, max_threads=8)
 ```py
 valid: bool = verify(g, h, p, x)  # Verifies the discrete log found is correct
 smooth: int = smoothness(n)  # Finds the smoothness of an integer n - the largest prime factor
+prime: bool = is_prime(n)  # Verifies the number is a prime
+safe_prime: bool = is_safe_prime(n)  # Verifies the number is a safe prime - i.e. n = 2p+1
 ```
